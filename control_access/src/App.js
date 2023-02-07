@@ -4,10 +4,11 @@ import './App.css';
 import Navbar from './components/navbar.js';
 import Page1 from './components/page1.js';
 import Schedule from './components/schedule.js';
-import Schedule from './components/footer.js';
+import Footer from './components/footer.js';
 import './static/css/navbar.css'
 import './static/css/page1.css'
 import './static/css/main.css'
+import './static/css/footer.css'
 
 function App() {
   return (
