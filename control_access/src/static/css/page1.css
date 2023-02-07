@@ -1,0 +1,211 @@
+@font-face {
+    font-family: brexter;
+    src: url('../font/brexter-brexter-700.ttf');
+}
+@font-face {
+    font-family: brexter-outline;
+    src: url('../font/brexter-brexter-outline-700.ttf');
+}
+.page1_1{
+    width: 100%;
+    height: calc(100vh - 15vh -130px - 30px);
+    display: flex;
+    justify-content:space-between;
+    
+    padding: 40px 0 0 0px;
+}
+.page1_1 .text {
+    width: 60%;
+    height: 100%;
+    padding-left:60px;
+    padding-top:60px;
+}
+
+.page1_1 .text h2{
+    font-family: brexter;
+    font-size: 50px;
+    text-align: start;
+    letter-spacing: 3px;
+    line-height: 50px;
+}
+.page1_1 .text h3{
+    font-family: brexter-outline;
+    font-size: 30px;
+    text-align: start;
+    line-height: 50px;
+
+}
+.page1_1 .text h4{
+    color:#ffea20;
+    font-size:32px;
+    text-align: start;
+    line-height: 30px;
+    line-height: 50px;
+    font-family: 'Anton', sans-serif;
+}
+.page1_1 .images{
+    width: 40%;
+    height: 100%;
+    
+}
+.page1_1 .text .input{
+    width: 97%;
+    height: 8vh;
+    line-height: 80px;
+    margin-top:50px;
+}
+.input input::placeholder {
+    color: #1E1E1E;
+    text-align: center;
+    font-size: 25px;
+    font-weight: bold;
+    font-family: 'Anton', sans-serif;
+}
+.page1_1 .text .input input{
+    width: 100%;
+    height: 100%;
+    background-color: #ffea20;
+    color: #1E1E1E;
+    outline: none;
+    border: none;
+    padding: 10px;
+    font-size: 19px;
+    font-family: 'Anton', sans-serif;
+}
+
+.image1,.image2{
+   
+    height: 180px;
+    width: 250px;
+    float: right;
+}
+.image1{
+    margin-right: 40px;
+}
+.image2{
+    margin-right: 90px;
+    margin-top: 5px;
+}
+.image1 img,.image2 img{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.tape{
+    width: 100%;
+    height: 5vh;
+    color: #ffea20;
+    border-top: 4px solid #ffea20;
+    border-bottom: 4px solid #ffea20;
+    margin-top:95px;
+    text-transform: uppercase;
+    font-family:brexter,sans-serif;
+    word-spacing: 15px;
+    overflow: hidden;
+    line-height: 5vh;
+
+}
+
+.select{
+    align-content: center;
+    height: 20vh;
+    margin-top: 70px;
+    padding-top: 5vh;
+    width: 100%;
+}
+.select select{
+    background: none;
+    border: 1px solid #ffea20;
+    color: #ffea20;
+    font-family: brexter,sans-serif;
+    height: 10vh;
+    margin: auto;
+    outline: none;
+    padding: 5px;
+      padding-left: 5px;
+    text-align: center;
+    text-transform: uppercase;
+    width: 70%;
+    text-align: start;
+    padding-left: 30px;
+    font-size: 18px;
+    letter-spacing: 1.2px;
+}
+.select select *{
+    background: #ffea20;
+    border: 1px solid #1E1E1E;
+    color: #1E1E1E;
+    font-family: brexter,sans-serif;
+    height: 10vh;
+    margin: auto;
+    outline: none;
+    padding: 5px;
+      padding-left: 5px;
+    text-align: center;
+    text-transform: uppercase;
+    width: 50%;
+    text-align: start;
+    padding-left: 30px;
+}
+.select select option:hover{
+    background: #1E1E1E;
+    border: 1px solid #ffea20;
+    color: #ffea20;
+    font-family: brexter,sans-serif;
+    height: 10vh;
+    margin: auto;
+    outline: none;
+    padding: 5px;
+      padding-left: 5px;
+    text-align: center;
+    text-transform: uppercase;
+    width: 50%;
+    text-align: start;
+    padding-left: 30px;
+}
+
+.schedule{
+    background:#383838;
+    height: 100vh;
+    width: 100%;
+   
+    position: relative
+}
+.schedule h3{
+    background:#383838;
+    font-size: 25px;
+    width: 100%;
+    font-family: brexter,sans-serif;
+    color: #ffea20;
+    padding-top: 30px;
+    margin: auto;
+    letter-spacing: 1.2px;
+    position: relative;
+}
+.schedule h3::before{
+    content: "";
+    background-color:#ffea20;
+    color: #ffea20;
+    display: block;
+    position: absolute;
+    top: 66%;
+    left: 0;
+    right: 25%;
+    z-index: 4;
+    height: 3.5px;
+    width: 25%
+}
+
+.imgschd{
+    height: 90vh;
+    overflow: hidden;
+    width: 80%;
+    margin: auto;
+}
+
+.imgschd img{
+    width: 100%;
+    height: 100%;
+    
+}
