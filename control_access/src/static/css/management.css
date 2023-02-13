@@ -5,14 +5,14 @@
 .managecont{
     display: flex;
     width: 90%;
-  
+    justify-content:space-between;
     margin:auto;
     margin-top: 8vh;
 }
 
 .leftmanag{
     max-height: 90vh;
-    width: 35%;
+    width: 32%;
 
 }
 .rightmanag{
@@ -112,7 +112,7 @@ height: 32px;
 .addusertogym,.morestatic{
     width: 45%;
     background-color: #383838;
-    height: 120px;
+    height: 140px;
     margin-top: 25px;
     border-radius: 8px;
 }
