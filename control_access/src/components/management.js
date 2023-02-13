@@ -11,6 +11,12 @@ import Chart from 'chart.js/auto';
 
 
 
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Pie } from "react-chartjs-2";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
+
+
 const data = {
   labels: [
     'Red',
@@ -34,14 +40,12 @@ const config = {
   data: data,
 };
 
-
-const chart = new Chart(ctx,config)
 function Management() {
   return (
     <div className='managecont'>
       <div className="leftmanag">
         <div className='chartmanage'>
-        <canvas id="myChart"></canvas>
+        <Pie data={data} />
         </div>
         <div className='adduser'>
           <div className='addusertogym'>
