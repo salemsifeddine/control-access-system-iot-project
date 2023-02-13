@@ -1,0 +1,86 @@
+@font-face {
+    font-family: brexter;
+    src: url('../font/brexter-brexter-700.ttf');
+}
+@font-face {
+    font-family: BebasNeue;
+    src: url('../font/BebasNeue-Regular.ttf');
+}
+
+.register{
+    height: 90vh;
+    width: 96%;
+    margin: auto;
+    margin-top: 2.5vh;
+    border: 2px solid #FFEA20;
+    padding:15px;
+    display:flex;
+    justify-content: space-around;
+}
+.leftside{
+    width: 40%;
+    height: 100%;
+    text-align: start;
+    padding-left: 50px;
+    padding-top: 35px;
+}
+
+.rightside{
+    width: 55%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+.rightside img{
+    position: absolute;
+    left: 90px;
+    top: -89px;
+}
+.leftside h1{
+    color: #FFEA20;
+    font-family: brexter;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+label{
+    color: #FFEA20;
+    font-family: 'Anton', sans-serif;
+}
+input{
+    width: 95%;
+    height: 45px;
+    outline: none;
+    background:none;
+    border: 1px solid #FFEA20;
+    margin-bottom: 10px;
+}
+
+.buttonlogin{
+    display: flex;
+    justify-content: end;
+}
+button{
+    width: 100px;
+    border: 0;
+    background: #FFEA20;
+    border: 2px solid #ffea20;
+    font-family: BebasNeue;
+    color:#1E1E1E;
+    width: 100px;
+height: 35px;
+font-size: 18px;
+line-height: 35px;
+margin-right: 20px;
+}
+
+.leftside p{
+    text-align: center;
+    font-family:BebasNeue;
+    color: #fff;
+
+}
+
+.leftside p a{
+    color: #FFEA20
+}

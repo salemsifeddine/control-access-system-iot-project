@@ -99,7 +99,7 @@ height: 32px;
     height: calc(90vh - 120px -25px);
     width: 100%;
     background:#383838;
-   
+   padding: 15px;
     border-radius: 8px;
 }
 
