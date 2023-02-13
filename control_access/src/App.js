@@ -2,22 +2,41 @@
 import logo from './logo.svg';
 import './App.css';
 import Navbar from './components/navbar.js';
-import Page1 from './components/page1.js';
-import Schedule from './components/schedule.js';
+import Home from './components/home.js';
+import Management from './components/management.js';
+import Statistics from './components/statistics.js';
 import Footer from './components/footer.js';
 import './static/css/navbar.css'
-import './static/css/page1.css'
 import './static/css/main.css'
 import './static/css/footer.css'
 
+
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Link
+} from 'react-router-dom';
+
 function App() {
   return (
+
+   
     <div className="App">
-     <Navbar/>
-     <Page1/>
-     <Schedule />
-     <Footer />
+      
+       <Router>
+       <Navbar/>
+    <Routes>  
+      <Route  path='home' element={< Home />}></Route>
+      <Route  path='management' element={< Management />}></Route>
+      <Route  path='statistics' element={< Statistics />}></Route>
+    </Routes>
+     
+    
+      </Router>
+
     </div>
+   
   );
 }
 

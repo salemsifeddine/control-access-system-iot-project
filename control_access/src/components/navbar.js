@@ -1,23 +1,22 @@
 import React from 'react'
+import {
+    Link,Router
+} from 'react-router-dom';
 
 function Navbar() {
   return (
+   
     <div className='navbar'>
         <ul>
             <li> 
-                <a>
-                    Home
-                </a>
+            <Link to="/home">Home</Link>
+               
             </li>
             <li>
-                <a>
-                    management
-                </a>
+                <Link to="/management">management</Link>
             </li>
             <li>
-                <a>
-                    statistics
-                </a>
+                <Link to="statistics">statistics</Link>
             </li>
             <li className='buttonlogin'>
                <button>logout</button>
@@ -25,6 +24,7 @@ function Navbar() {
         </ul>
          
     </div>
+    
   )
 }
 
