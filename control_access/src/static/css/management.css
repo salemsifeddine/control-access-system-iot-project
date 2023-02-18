@@ -21,6 +21,9 @@
     float: right;
 
 }
+.outgym{
+    color: red !important;
+}
 
 .listmanage{
     width: 100%;
@@ -69,7 +72,7 @@ padding-left: 10px;
     font-size: 25px;
 }
 
-.usernamelist p{
+.usernamelist .ingym{
     font-family: 'Anton', sans-serif;
     color: #36B815;
     font-size:13px
@@ -81,6 +84,12 @@ padding-left: 10px;
     font-family: 'Anton', sans-serif;
     color: #FFEA20;
     font-size:15px;
+}
+.rightlist .seemore a{
+    font-family: 'Anton', sans-serif;
+    color: #FFEA20;
+    font-size:15px;
+
 }
 
 .listmanage:not(:last-of-type){

@@ -1,14 +1,12 @@
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,re_path, include
+from django.views.generic import TemplateView
 from . import views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("",views.index,name="index"),
-    path("home",views.index,name="home"),
-    path("statistics",views.index,name="statistics"),
-    path("management",views.index,name="management"),
-    path("login",views.index,name="login"),
-    path("register",views.index,name="register")
+    path("",include("control.urls")),
+   
 ]
