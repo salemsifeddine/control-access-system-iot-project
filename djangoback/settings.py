@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "corsheaders",
     'rest_framework_simplejwt.token_blacklist',
     'rest_framework_simplejwt',
+    'rest_framework.authtoken'
 ]
 
 MIDDLEWARE = [
@@ -72,18 +73,19 @@ WSGI_APPLICATION = 'djangoback.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'control_access_system_db',
-        'USER':'root',
-        "PASSWORD":'',
-        'HOST':'localhost',
-        'PORT':'3306'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'control_access_system_db',
+    #     'USER':'root',
+    #     "PASSWORD":'',
+    #     'HOST':'localhost',
+    #     'PORT':'3306',
+        
+    # }
 }
 
 
@@ -136,6 +138,7 @@ REST_FRAMEWORK = {
                 'rest_framework.authentication.BasicAuthentication',
                 'rest_framework.authentication.SessionAuthentication',
                 'rest_framework_simplejwt.authentication.JWTAuthentication',
+                'rest_framework.authentication.TokenAuthentication',
                 )
         
     }
@@ -182,3 +185,9 @@ SIMPLE_JWT = {
 
 
 CORS_ALLOW_ALL_ORIGINS=True
+CORS_ORIGIN_WHITELIST = [
+    "http://127.0.0.1:8000"
+]
+
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'mediafiles')
+MEDIA_URL = '/media/'

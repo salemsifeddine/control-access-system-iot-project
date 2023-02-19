@@ -7,6 +7,7 @@ import { createContext, useState,useEffect } from "react";
 import jwt_decode from 'jwt-decode'
 const Authcontext = createContext()
 import {useNavigate } from 'react-router-dom'
+import swal from 'sweetalert'
 
 export default Authcontext;
 
@@ -47,7 +48,6 @@ export const Authprovider=({children})=>{
         
         ).then((data) => {
 
-                console.log(status)
             if (status === 200) {
 
                 setAuthToken(data);
@@ -98,7 +98,9 @@ export const Authprovider=({children})=>{
     });
     }
 
+
     let contextData = {
+        
         loginuser : loginuser,
         user:user,
         logout:logout

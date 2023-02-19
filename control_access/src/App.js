@@ -42,7 +42,7 @@ function App() {
               <Route  path='management' element={< Management />}></Route>
               <Route  path='statistics' element={< Statistics />}></Route>
               <Route  path='management/user/detail' element={< UserDetail />}></Route>
-              <Route  path='user/add' element={< AddUser />}></Route>
+              <Route  path='management/user/add' element={< AddUser />}></Route>
             </Route>
 
             <Route  path='home' element={< Home />}></Route>

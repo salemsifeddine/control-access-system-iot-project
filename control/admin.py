@@ -11,5 +11,6 @@ from .models import *
 
 admin.site.register(UserProfile)
 admin.site.register(Management)
-
-
+admin.site.register(ProgramTab)
+admin.site.register(Schedule)
+admin.site.register(AddAthlete)

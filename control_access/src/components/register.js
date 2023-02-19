@@ -1,3 +1,5 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable no-unused-expressions */
 /* eslint-disable no-const-assign */
 /* eslint-disable no-loop-func */
 /* eslint-disable no-unused-vars */
@@ -9,14 +11,54 @@ import '../static/css/register.css'
 import cities from './cities.json'
 import Cities from './cities.js'
 import Communs from './communs.js'
+import {useNavigate } from 'react-router-dom'
 
 
 function Register() {
+  let [register, setRegister] = useState({})
+  let [username,setUsername]=useState()
+  let [email,setEmail]=useState()
+  let [password,setPassword]=useState()
+  let [city,setCity]=useState()
 
+  let history = useNavigate();
+  
+
+  const inputHandler = (e)=>{
+   console.log(register)
+
+   
+
+    // if(e.target.name==="image" ){
+    //   console.log("image",e.target.files[0])
+    //   setRegister({
+    //     ...register,
+    //     [e.target.name]:e.target.files[0].name
+    //   })
+    // }else{
+      if(e.target.name == "city"){
+        
+        setRegister({
+          ...register,
+          [e.target.name]:document.getElementById("selectcity").children[document.getElementById("selectcity")["selectedIndex"]].text 
+        })
+        
+      }else{
+        
+        setRegister({
+          ...register,
+          [e.target.name]: e.target.value
+        })
+      }
+      
+    // }
+    
+  }
 
   const [cityselected, setCityselected] = useState(null)
   
   const [objcom, setObjcomm] = useState([])
+
 
   var object=[]
   var communsObj =[]
@@ -53,23 +95,82 @@ function Register() {
     <div className='register'>
       <div className='leftside'>
       <h1>Register</h1>
+
+      <form onSubmit={(e)=>{
+        e.preventDefault();
+        
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+  }
+  
+  var csrftoken = getCookie('csrftoken');
+  
+ fetch("http://127.0.0.1:8000/registerapi/",
+    {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+            "X-CSRFToken": csrftoken
+        },
+        body: JSON.stringify(register)
+    }
+).then(ress=>{
+  ress.json();
+  console.log(ress)
+
+  if(ress.status === 200){
+                swal("CONGRATS", "Account created successfully!", "success");
+                document.getElementsByClassName("swal-button")[0].style.opacity =0
+                setTimeout(() => {
+                  history("/login")
+                  document.getElementsByClassName("swal-modal")[0].style.display = "none"
+                }, 3000);
+      }else{
+        swal(
+          'Recheck your network ',
+          'and register again,please!',
+          'error'
+        )
+        document.getElementsByClassName("swal-button")[0]?document.getElementsByClassName("swal-button")[0].style.opacity =0:''
+        setTimeout(() => {
+          history("/register")
+          document.getElementsByClassName("swal-modal")[0].style.display = "none"
+        }, 3000);
+      }
+      console.log(ress)
+      
+    }).catch(error=>console.log(error))
+    
+        
+
+      }}>
       <label>hall name</label>
       <br></br>
-    
-   
-      <input type="text" name="username"/>
+      <input value={username} onChange={inputHandler} type="text" name="username"/>
       <br></br>
       <label>email</label>
       <br></br>
-      <input type="email" name="email"/>
+      <input value={email} onChange={inputHandler} type="email" name="email"/>
       <br></br>
       <label>password</label>
       <br></br>
-      <input type='password' name="password"/>
+      <input value={password} onChange={inputHandler} type='password' name="password"/>
       
 
       <div className='selectselect'>
-      <select id='selectcity' onChange={(e)=>{
+      <select value={city} name="city" id='selectcity' onChange={inputHandler} onClick={(e)=>{
+       
         
         setObjcomm([])
           var idd=e.target.value;
@@ -83,15 +184,12 @@ function Register() {
 
             
             
-            // console.log(< Communs commun={communename} id={id} />)
+           
 
-            objcomarray.push(< Communs commun={communename} id={id} />)
+            objcomarray.push(< Communs  commun={communename} id={id} />)
             
            
-            
-            // document.getElementById("communscity").append(<option key={id} value={id}>
-            //   communename
-            // </option>)
+         
 
         
           }
@@ -101,7 +199,7 @@ function Register() {
       {object}
     </select>
    
-   {cityselected? <select id="communscity">
+   {cityselected? <select name="commun" id="communscity" onChange={inputHandler}>
    {objcom}
    </select>:""}
    
@@ -110,8 +208,12 @@ function Register() {
    <br></br>
             <br></br>
       <div className='buttonlogin'>
-               <button>sign up</button>
+               <button onClick={()=>{
+                console.log("clicked")
+               }} type="submit">sign up</button>
             </div>
+      </form>
+   
             <br></br>
             <br></br>
             <p>Have an account? <a href="login">login</a></p>

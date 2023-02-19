@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/alt-text */
-import React,{useState } from 'react'
+import React,{useState,useContext } from 'react'
 import '../static/css/management.css'
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -15,6 +15,7 @@ import {Link} from 'react-router-dom'
 import {useNavigate } from 'react-router-dom'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
+import Authcontext from './authcontext.js'
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -47,6 +48,7 @@ const config = {
 
 function Management() {
 
+  let {user} = useContext(Authcontext)
   const [api,setApi] = useState("")
 
   var object =[]
@@ -73,11 +75,12 @@ function Management() {
   // }
   const getapi = ()=>{
     Axios.get("http://127.0.0.1:8000/managementapi").then((respo)=>{
-      setApi(respo.data)
-
+      setApi(respo.data[user.username])
+   
      
     })
   }
+  
   getapi();
 
   for(let il=0;il<api.length;il++){
@@ -99,7 +102,7 @@ function Management() {
         <div className='adduser'>
           
           <div className='addusertogym' onClick={()=>{
-            history('/adduser');
+            history('user/add');
           }}>
               <PersonAddIcon  />
            

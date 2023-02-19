@@ -3,6 +3,10 @@
     padding: 0;
     color: #fff
 }
+@font-face {
+    font-family: brexter;
+    src: url('../font/brexter-brexter-700.ttf');
+}
 
 body{
     background:#1E1E1E
@@ -13,4 +17,47 @@ a{
 }
 ul, li {
     list-style: none;
+}
+.tabulator .tabulator-header .tabulator-col{
+    background-color: #383838 !important;
+    height: 60px !important;
+    font-family:brexter;
+
+}
+.tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title{
+    color: #FFEA20;
+    line-height: 60px !important;
+    text-align: center !important;
+    font-size: 16px !important;
+}
+.tabulator .tabulator-header{
+    font-weight: 200;
+    height: 60px
+}
+.tabulator-row{
+    background-color: #383838 !important;
+}
+.tabulator-row.tabulator-row-even{
+    background-color: #383838 !important
+}
+
+
+tr{
+    height: 15vh;
+background: #234242;
+color: #fff;
+font-size: 16px;
+font-family: anton;
+}
+table{
+    width: 100%;
+}
+
+
+
+table tr td:first-of-type{
+    color: #FFEA20;
+    font-family: brexter;
+    width: 30%;
+    font-size:20px;
 }

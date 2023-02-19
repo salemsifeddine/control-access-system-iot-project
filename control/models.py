@@ -20,19 +20,60 @@ class UserProfile(models.Model):
 
 
     def __str__(self):
-        return str("profile user")
+        return _("profile user")
 
 
-class Management(models.Model):
-    first_name=models.CharField(max_length=255,default="")
-    last_name=models.CharField(max_length=255,default="")
-    phone=models.CharField(max_length=20,default="")
-    city= models.CharField(max_length=25,default="")
-    email=models.EmailField(_(""), max_length=254)
-    ingym = models.BooleanField(default=False)
-    image=models.ImageField(_(""), upload_to="image_management", height_field=None, width_field=None, max_length=None)
+
+
+class ProgramTab(models.Model):
+    duration1 = models.TimeField(null=True)
+    duration2 = models.TimeField(null=True)
+    program=models.CharField(default="open", max_length=50)
+    
 
     def __str__(self):
-        return str("management")
+        return "program"
 
+class Schedule(models.Model):
+    STATUS = (
+        ("saturday",_("saturday")),
+        ("sunday",_("sunday")),
+        ("monday",_("monday")),
+        ("tuesday",_("tuesday")),
+        ("wednesday",_("wednesday")),
+        ("thursday",_("thursday")),
+        ("friday",_("friday")),
+    )
+    hall=models.ForeignKey(User,on_delete=models.CASCADE)
+    day = models.CharField(choices=STATUS,default="friday", max_length=50)
+    programSche=models.ForeignKey(ProgramTab,on_delete=models.CASCADE)
+    
+    
+    
+    def __str__(self):
+        return "schedule"
+
+
+class AddAthlete(models.Model):
+    fullname=models.CharField( max_length=50)
+    user_id=models.CharField( max_length=50)
+    user_phone=models.CharField( max_length=50)
+    subscription_delay_from=models.DateField( auto_now=False, auto_now_add=True)
+    subscription_delay=models.DateField( auto_now=False, auto_now_add=False)
+    access_code=models.CharField( max_length=50)
+
+    def __str__(self):
+        return "user"
+
+class Management(models.Model):
+    hall=models.ForeignKey(User,on_delete=models.CASCADE)
+    athlete=models.OneToOneField(AddAthlete,on_delete=models.CASCADE)
+    image=models.ImageField( upload_to="image_management",blank=True,null=True, height_field=None, width_field=None, max_length=None)
+    fullname=models.CharField( max_length=50)
+    city= models.CharField(max_length=25,default="algeries")
+    email=models.EmailField( max_length=254,default="user@user.com")
+    ingym = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return "management"
 
