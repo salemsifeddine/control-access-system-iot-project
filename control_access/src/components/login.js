@@ -9,8 +9,7 @@ import hdaydi from '../static/images/hdaydi.png'
 import '../static/css/register.css'
 import Authcontext from './authcontext.js'
 import axios from "axios"
-
-
+import {motion} from 'framer-motion'
 
 
 
@@ -45,7 +44,11 @@ function Login() {
 const buttonenable = (logindata.username == '') && (logindata.password == '')
 
   return (
-    <div className='register'>
+    <motion.div className='register' 
+    initial={{width:0+'%'}}
+   animate={{width:100+'%'}}
+   exit={{x:window.innerWidth, transition:{duration:0.1}}}
+    >
       <div className='leftside'>
       <h1>Register</h1>
       
@@ -72,7 +75,7 @@ const buttonenable = (logindata.username == '') && (logindata.password == '')
       <div className='rightside'>
         <img src={hdaydi} />
       </div>
-    </div>
+    </motion.div>
   )
 }
 

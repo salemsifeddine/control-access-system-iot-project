@@ -16,6 +16,7 @@ import {useNavigate } from 'react-router-dom'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import Authcontext from './authcontext.js'
+import {motion} from 'framer-motion'
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -94,7 +95,11 @@ function Management() {
 
 
   return (
-    <div className='managecont'>
+    <motion.div className='managecont' 
+    initial={{width:0+'%'}}
+    animate={{width:100+'%'}}
+    exit={{x:window.innerWidth, transition:{duration:0.1}}}
+      >
       <div className="leftmanag">
         <div className='chartmanage'>
         <Pie data={data} />
@@ -116,11 +121,14 @@ function Management() {
         </div>
       </div>
       <div className="rightmanag">
+      <div className='searchathletes'>
+        <input type="text" />
+        </div>
         <div className='listsmanage'>
         {object}
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 

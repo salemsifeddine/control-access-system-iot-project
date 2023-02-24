@@ -1,10 +1,15 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react'
 import imgg from '../static/images/body.jpg' 
+import {motion} from 'framer-motion'
 
 function Page1() {
   return (
-   <div>
+   <motion.div 
+   initial={{width:0+'%'}}
+   animate={{width:100+'%'}}
+   exit={{x:window.innerWidth, transition:{duration:0.1}}}
+   >
      <div className='page1_1'>
         <div className='text'>
             <h2>GYM website</h2>
@@ -31,7 +36,7 @@ function Page1() {
     </div>
 
     
-   </div>
+   </motion.div>
   )
 }
 

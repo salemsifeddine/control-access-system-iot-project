@@ -20,19 +20,25 @@ function Navbar() {
                 <li>
                     <Link to="/management">management</Link>
                 </li>
-                <li>
+                {/* <li>
                     <Link to="statistics">statistics</Link>
-                </li>
+                </li> */}
             </>
         :
         ''
         }
             
-            <li className='buttonlogin'>
+            
                
-                {user? <button  onClick={logout}>logout </button>:  <Link to='/login' ><button>Login</button></Link>  }
+                {user? <li className='buttonlogin'> <button  onClick={logout}>logout </button> </li>:<><li className='buttonlogin'>  <Link to='/login'><button>Login</button></Link> </li><li className='buttonlogin btnreg'> <Link to='/register'><button>Register</button></Link> </li></> }
               
-            </li>
+            
+            
+               
+                
+              
+            
+            
         </ul>
          
     </div>

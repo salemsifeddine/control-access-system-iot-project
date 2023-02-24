@@ -75,7 +75,7 @@ function Schedule() {
           
         }}>
             <option value="salem">body force</option>
-            <option value="abdelah11">body mma</option>
+            <option value="salem1111">body mma</option>
         </select>
     </div>
     <div className='schedule'>

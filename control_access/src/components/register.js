@@ -12,6 +12,7 @@ import cities from './cities.json'
 import Cities from './cities.js'
 import Communs from './communs.js'
 import {useNavigate } from 'react-router-dom'
+import {motion} from 'framer-motion'
 
 
 function Register() {
@@ -92,7 +93,10 @@ function Register() {
     }).then(reponse=> console.log(reponse))
   }
   return (
-    <div className='register'>
+    <motion.div className='register' initial={{width:0+'%'}}
+    animate={{width:100+'%'}}
+    exit={{x:window.innerWidth, transition:{duration:0.1}}}
+    >
       <div className='leftside'>
       <h1>Register</h1>
 
@@ -223,7 +227,7 @@ function Register() {
       <div className='rightside'>
         <img src={hdaydi} />
       </div>
-    </div>
+    </motion.div>
   )
 }
 

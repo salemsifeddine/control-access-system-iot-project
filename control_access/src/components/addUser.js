@@ -8,6 +8,7 @@ import '../static/css/user.css'
 import { json,useNavigate } from 'react-router-dom';
 import $ from 'jquery'
 import swal from 'sweetalert'
+import {motion} from 'framer-motion'
 
 
 function AddUser() {
@@ -40,7 +41,9 @@ function AddUser() {
   }
   
   return (
-    <div className='layer1'>
+    <motion.div className='layer1'initial={{width:0+'%'}}
+    animate={{width:100+'%'}}
+    exit={{x:window.innerWidth, transition:{duration:0.1}}}>
         <form onSubmit={(e)=>{
           e.preventDefault();
           function getCookie(name) {
@@ -166,7 +169,7 @@ function AddUser() {
         </div>
         </div>
         </form>
-    </div>
+    </motion.div>
   )
 }
 
