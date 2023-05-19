@@ -15,6 +15,7 @@ class AddUserSer(serializers.Serializer):
         fields = "__all__"
 
 
+
 class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
             required=True,

@@ -1,9 +1,11 @@
+/* eslint-disable no-template-curly-in-string */
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react'
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Link} from 'react-router-dom'
 
 function ContUser(props) {
+  const linkk = `/user/detail/${props.id}`
   return (
     
     <div className='listmanage' key={props.li}>
@@ -15,8 +17,10 @@ function ContUser(props) {
         </div>
       </div>
       <div className='rightlist'>
-        <div className='seemore'><Link to='user/detail'>see more</Link></div>
-        <div className='icon'><DeleteIcon/></div>
+        <div className='seemore'><Link to={linkk}>see more</Link></div>
+        <div className='icon'><DeleteIcon onClick={()=>{
+          
+        }}/></div>
       </div>
     </div>
 

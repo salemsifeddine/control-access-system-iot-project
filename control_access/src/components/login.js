@@ -4,16 +4,17 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable eqeqeq */
 /* eslint-disable jsx-a11y/alt-text */
-import React, { createContext,useContext, useState } from 'react'
+import React, { createContext,useContext, useState ,useEffect} from 'react'
 import hdaydi from '../static/images/hdaydi.png' 
 import '../static/css/register.css'
 import Authcontext from './authcontext.js'
 import axios from "axios"
 import {motion} from 'framer-motion'
-
+import { useParams } from 'react-router-dom';
 
 
 function Login() {
+  
   const baseurl=""
 
   let {loginuser} = useContext(Authcontext)
@@ -43,11 +44,13 @@ function Login() {
 // }
 const buttonenable = (logindata.username == '') && (logindata.password == '')
 
+
+
   return (
     <motion.div className='register' 
-    initial={{width:0+'%'}}
-   animate={{width:100+'%'}}
-   exit={{x:window.innerWidth, transition:{duration:0.1}}}
+    initial={{opacity:0}}
+    animate={{opacity:1}}
+    exit={{opacity:0, transition:{duration:0.1}}}
     >
       <div className='leftside'>
       <h1>Register</h1>

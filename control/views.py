@@ -14,9 +14,15 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import viewsets
 from .serializers import *
+from django.core import serializers
 from django.utils.translation import gettext_lazy as _
 from rest_framework import generics
 from rest_framework.authtoken.models import Token
+import serial
+
+
+
+
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -33,6 +39,8 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class= MyTokenObtainPairSerializer
 
 def index(request):
+    
+
    
     return render(request,'index.html')
 
@@ -54,25 +62,59 @@ def database(request):
 
 
 objdataapi={}
+inout={}
 
-@api_view(["GET"])
-def management(request):
-    data=list(
+import json
+class Managementapi(APIView):
+    serializer_class=ManagementSerializer
+    def get(self,request):
+        try :
+            ser = serial.Serial('COM6', 9600) # open the serial port at 9600 bits per second
+            uid =ser.readline().decode('utf-8').rstrip();
+            if AddAthlete.objects.filter(access_code=uid) :
+                athlete_id=AddAthlete.objects.filter(access_code=uid).first().fullname
+                managself=Management.objects.filter(fullname=athlete_id).first()
+
+                if managself.ingym == False :
+                    managself.ingym = True
+                else:
+                    managself.ingym = False
+
+                
+                managself.save()
+
+                ingym = AddAthlete.objects.filter(access_code=uid).first().access_code
+                print(' in gym')
+            else:
+                print(ser.readline().decode('utf-8').rstrip())
+                print('not in gym')
+                
+                uid="none"
+        except:
+            uid="none"
+        data=list(
          Management.objects.values()
-    )
-    
-    for x in User.objects.all():
-        datt=list(Management.objects.filter(hall_id=x.id).all().values()
         )
-       
-        objdataapi[x.username]=datt
-        
     
-    return JsonResponse(objdataapi,safe=False)
+        for x in User.objects.all():
+            datt=list(Management.objects.filter(hall_id=x.id).all().values())
+            for y in datt:
+                yy = y["athlete_id"]
+                y["athlete_info"] = AddAthlete.objects.filter(id=yy).values().first()
+                ii = Management.objects.filter(hall_id=x.id,ingym=True).all().count()
+                oo = Management.objects.filter(hall_id=x.id,ingym=False).all().count()
+                inout[x.username]={
+                "ingym":ii,
+                "outgym":oo
 
-class ManagementViewSet(TokenObtainPairSerializer):
-    queryset = Management.objects.all()
-    serializer_class = ManagementSerializer
+            }
+               
+       
+            objdataapi[x.username]=datt
+            
+
+        return Response({"inout":inout,"uid":uid,"list":objdataapi})
+
 
 
 
@@ -169,32 +211,74 @@ def schedule(request):
 #     return JsonResponse("database")
 
 
+class MyModelDetailView(APIView):
+    
+    
+
+    def get_object(self, pk):
+        try:
+            return Management.objects.filter(pk=pk)
+        except Management.DoesNotExist:
+            pass
+
+    def get(self, request, pk):
+        mymodel = self.get_object(pk)
+        serializer = ManagementSerializer(mymodel)
+        
+        
+        yy = mymodel.all().values().first()
+        yyy = yy["athlete_id"]
+        yy["athlete_info"] = AddAthlete.objects.filter(id=yyy).values().first()
+    
+
+
 class ApiadduserView(APIView):
     serializer_class=AddUserSer
 
     def get(self,request):
-        print("GET")
+       
         allobj= AddAthlete.objects.all().values()
         return Response({"message":"list of objects","list":allobj})
 
 
     def post(self,request):
+        ser = serial.Serial('COM6', 9600)
         ser_obj=AddUserSer(data=request.data)
+        
         
   
        
         
         
         if ser_obj.is_valid():
+             
+            
+            try: 
+                 
+                 # open the serial port at 9600 bits per second
+                 while True:
+                     
+                    uid = ser.readline().decode('utf-8').rstrip();
+                    
+                    if uid !="none":
+                        break
+            except :
+                while True:
+                     
+                    uid = ser.readline().decode('utf-8').rstrip();
+                    
+                    if uid !="none":
+                        break
+                    
             
             AddAthlete.objects.create(
                 
-               
+                image=request.data["image"],
                 fullname=request.data["fullname"],
                 user_id=request.data["user_id"],
                 user_phone=request.data["user_phone"],
                 subscription_delay=request.data["user_subscription_delay"],
-                access_code=request.data["user_access_code"],
+                access_code=uid,
             
             )
             userid= AddAthlete.objects.filter(
@@ -202,7 +286,7 @@ class ApiadduserView(APIView):
                 user_phone=request.data["user_phone"])[0].id
                 
             Management.objects.create(
-                 image=request.data["image"],
+                hall=request.user,
                 athlete=AddAthlete.objects.get(pk=int(userid)),
                 fullname=request.data["fullname"]
                 )

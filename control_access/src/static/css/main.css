@@ -64,3 +64,6 @@ table tr td:first-of-type{
 .App{
     overflow-y: hidden;
 }
+.btnprofile{
+    margin-top: 70vh !important;
+}

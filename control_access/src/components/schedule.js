@@ -5,6 +5,7 @@ import img1 from '../static/images/Screenshot.png'
 import 'react-tabulator/lib/styles.css'; // required styles
 import 'react-tabulator/lib/css/tabulator.min.css'; // theme
 import { ReactTabulator } from 'react-tabulator';
+import Axios from 'axios'
 
 
 function Schedule() {
@@ -16,6 +17,7 @@ function Schedule() {
 
   let [sched, setSched] = useState([])
   let [prgrm, setPrgrm] = useState([])
+  let [total, setTotal] = useState([])
   let [que, setQue] = useState("salem")
   var contentth=[]
   var contenttr=[]
@@ -28,7 +30,7 @@ function Schedule() {
     }).then(resp=>resp.json()).then(data=>{
       
       setPrgrm(data[que])
-      console.log(data[que])
+      
     
     });
     // fetch("http://127.0.0.1:8000/programsch",{
@@ -66,17 +68,32 @@ function Schedule() {
   
   window.onload = schedapi();
 
+  const getapii = ()=>{
+    Axios.get("http://127.0.0.1:8000/managementapi").then((respo)=>{
+       
+      
+      
+      setTotal(respo.data.inout[que].ingym )
+      // set(respo.data.uid)
+      
+     
+    })
+  }
+  
+  getapii();
 
   return (
     <div>
          <div className='select'>
-        <select onChange={()=>{
+        <select onChange={(e)=>{
           setQue(document.getElementsByTagName("select")[0].value)
+          
           
         }}>
             <option value="salem">body force</option>
             <option value="salem1111">body mma</option>
         </select>
+        <h3>Status:{total} person in Gym</h3>
     </div>
     <div className='schedule'>
         <h3>Program of the week</h3>

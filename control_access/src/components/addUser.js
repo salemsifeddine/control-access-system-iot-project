@@ -41,9 +41,11 @@ function AddUser() {
   }
   
   return (
-    <motion.div className='layer1'initial={{width:0+'%'}}
-    animate={{width:100+'%'}}
-    exit={{x:window.innerWidth, transition:{duration:0.1}}}>
+    <motion.div className='layer1'
+    initial={{opacity:0}}
+    animate={{opacity:1}}
+    exit={{opacity:0, transition:{duration:0.1}}}
+    >
         <form onSubmit={(e)=>{
           e.preventDefault();
           function getCookie(name) {
@@ -88,7 +90,7 @@ function AddUser() {
       ).then(ress=>{
         ress.json();
 
-        if(ress.status === 200){
+        if(ress.status == 200){
                   swal("successfully accessed", "New rfid scanned & stored in DB!", "success");
                   document.getElementsByClassName("swal-button")[0].style.opacity =0
                   setTimeout(() => {
@@ -107,7 +109,7 @@ function AddUser() {
             document.getElementsByClassName("swal-modal")[0].style.display = "none"
            }, 3000);
         }
-        console.log(ress)
+        
         
       }).catch(error=>console.log(error))
 

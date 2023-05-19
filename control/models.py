@@ -55,6 +55,7 @@ class Schedule(models.Model):
 
 
 class AddAthlete(models.Model):
+    image=models.ImageField( upload_to="image_management",blank=True,null=True, height_field=None, width_field=None, max_length=None)
     fullname=models.CharField( max_length=50)
     user_id=models.CharField( max_length=50)
     user_phone=models.CharField( max_length=50)
@@ -68,12 +69,13 @@ class AddAthlete(models.Model):
 class Management(models.Model):
     hall=models.ForeignKey(User,on_delete=models.CASCADE)
     athlete=models.OneToOneField(AddAthlete,on_delete=models.CASCADE)
-    image=models.ImageField( upload_to="image_management",blank=True,null=True, height_field=None, width_field=None, max_length=None)
     fullname=models.CharField( max_length=50)
     city= models.CharField(max_length=25,default="algeries")
     email=models.EmailField( max_length=254,default="user@user.com")
     ingym = models.BooleanField(default=False)
+
     
     def __str__(self):
+        
         return "management"
 

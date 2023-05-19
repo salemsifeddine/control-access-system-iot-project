@@ -17,32 +17,11 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import Authcontext from './authcontext.js'
 import {motion} from 'framer-motion'
+import { List } from '@mui/material';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 
-const data = {
-  labels: [
-    'Red',
-    'Blue',
-    'Yellow'
-  ],
-  datasets: [{
-    label: 'My First Dataset',
-    data: [300, 50, 100],
-    backgroundColor: [
-      'rgb(255, 99, 132)',
-      'rgb(54, 162, 235)',
-      'rgb(255, 205, 86)'
-    ],
-    hoverOffset: 4
-  }]
-};
-
-const config = {
-  type: 'pie',
-  data: data,
-};
 
 
 
@@ -51,6 +30,32 @@ function Management() {
 
   let {user} = useContext(Authcontext)
   const [api,setApi] = useState("")
+  const [uid,setUid] = useState("")
+  const [datapie,setDatapie]=useState([11,21])
+
+  const data = {
+    labels: [
+      'In Gym',
+      'Out Gym',
+      
+    ],
+    datasets: [{
+      label: 'My First Dataset',
+      data: datapie,
+      backgroundColor: [
+        'rgb(255, 99, 132)',
+        'rgb(54, 162, 235)',
+        
+      ],
+      hoverOffset: 4
+    }]
+  };
+  
+  const config = {
+    type: 'pie',
+    data: data,
+  };
+  
 
   var object =[]
 
@@ -76,8 +81,18 @@ function Management() {
   // }
   const getapi = ()=>{
     Axios.get("http://127.0.0.1:8000/managementapi").then((respo)=>{
-      setApi(respo.data[user.username])
-   
+      setApi(respo.data.list[user.username])
+      setDatapie([respo.data.inout[user.username].ingym,respo.data.inout[user.username].outgym])
+      
+      if(respo.data.uid != "none"){
+        swal("successfully accessed", "New rfid scanned!"+respo.data.uid, "success");
+      }
+      // else{
+      //   swal("user Doesn't exist", "New rfid scanned!"+respo.data.uid, "error");
+      // }
+      
+      setUid(respo.data.uid)
+      
      
     })
   }
@@ -85,10 +100,13 @@ function Management() {
   getapi();
 
   for(let il=0;il<api.length;il++){
+   
+    if(api[il].ingym){
+      object.push(
+        <ContUser id={api[il].id} ingym={api[il].ingym} key={il} imgs={imgs} api={api} il={il} />
+      )
+    }
     
-    object.push(
-      <ContUser ingym={api[il].ingym} key={il} imgs={imgs} api={api} il={il} />
-    )
 
   }
  
@@ -96,9 +114,9 @@ function Management() {
 
   return (
     <motion.div className='managecont' 
-    initial={{width:0+'%'}}
-    animate={{width:100+'%'}}
-    exit={{x:window.innerWidth, transition:{duration:0.1}}}
+    initial={{opacity:0}}
+    animate={{opacity:1}}
+    exit={{opacity:0, transition:{duration:0.1}}}
       >
       <div className="leftmanag">
         <div className='chartmanage'>
@@ -115,8 +133,9 @@ function Management() {
          
           <div className='morestatic' onClick={()=>{
             swal("successfully accessed", "New rfid scanned & stored in DB!", "success");
+            history('/hall');
           }}>
-              <StackedLineChartIcon/>
+              <PersonAddIcon  />
           </div>
         </div>
       </div>
