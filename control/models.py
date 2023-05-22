@@ -73,7 +73,9 @@ class Management(models.Model):
     city= models.CharField(max_length=25,default="algeries")
     email=models.EmailField( max_length=254,default="user@user.com")
     ingym = models.BooleanField(default=False)
-
+    limitation= models.IntegerField(default=2)
+    accessed= models.IntegerField(default=0)
+    last_access= models.DateField( auto_now=False, auto_now_add=False)
     
     def __str__(self):
         

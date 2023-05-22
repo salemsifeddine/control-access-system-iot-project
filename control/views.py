@@ -19,7 +19,7 @@ from django.utils.translation import gettext_lazy as _
 from rest_framework import generics
 from rest_framework.authtoken.models import Token
 import serial
-
+from datetime import *
 
 
 
@@ -67,31 +67,72 @@ inout={}
 import json
 class Managementapi(APIView):
     serializer_class=ManagementSerializer
+    
     def get(self,request):
+        uidd="limited"
         try :
             ser = serial.Serial('COM6', 9600) # open the serial port at 9600 bits per second
             uid =ser.readline().decode('utf-8').rstrip();
+            
             if AddAthlete.objects.filter(access_code=uid) :
                 athlete_id=AddAthlete.objects.filter(access_code=uid).first().fullname
                 managself=Management.objects.filter(fullname=athlete_id).first()
+                
 
-                if managself.ingym == False :
+                if date.today() != managself.last_access:
+                    managself.last_access = date.today()
+                    managself.accessed = 0
+                    managself.save()
+
+                 
+                if managself.ingym == False and managself.accessed < managself.limitation:
+                    
+                    
                     managself.ingym = True
-                else:
+                    managself.accessed +=1
+                    uidd = ser.readline().decode('utf-8').rstrip()
+                    managself.save()
+                    print("outch")
+                elif managself.ingym == True and managself.accessed < managself.limitation:
                     managself.ingym = False
-
+                    managself.accessed +=1
+                    uidd = ser.readline().decode('utf-8').rstrip()
+                    managself.save()
+                    print("outchh")
+                elif managself.accessed == managself.limitation:
+                    managself.ingym = False
+                    uidd ="limited"
+                    managself.save()
+                    
+                else:
+                    uidd = ser.readline().decode('utf-8').rstrip()
+                    print("hola")
                 
-                managself.save()
-
+                
+                # elif managself.accessed == managself.limitation :
+                #     managself.ingym = False
+                #     managself.save()
+                #     print("out")
+            
+                # elif managself.accessed  > managself.limitation  :
+                #     managself.ingym = False
+                #     managself.save()
+                #     uidd="limited"
+                #     print("limited")
+                    
+               
+                
                 ingym = AddAthlete.objects.filter(access_code=uid).first().access_code
-                print(' in gym')
-            else:
-                print(ser.readline().decode('utf-8').rstrip())
-                print('not in gym')
                 
-                uid="none"
+                    
+                
+                
+                
+            else:
+                uidd="not exist"
+
         except:
-            uid="none"
+            uidd="error occured"
         data=list(
          Management.objects.values()
         )
@@ -113,7 +154,7 @@ class Managementapi(APIView):
             objdataapi[x.username]=datt
             
 
-        return Response({"inout":inout,"uid":uid,"list":objdataapi})
+        return Response({"inout":inout,"uid":uidd,"list":objdataapi})
 
 
 
