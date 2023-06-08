@@ -1,5 +1,7 @@
 from django.shortcuts import render
 import requests
+from django.utils import timezone
+from datetime import date
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
@@ -39,6 +41,46 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class= MyTokenObtainPairSerializer
 
 def index(request):
+    today = timezone.now().date()
+    ser = serial.Serial('COM6', 9600) # open the serial port at 9600 bits per second
+    print("get")
+    uid=request.GET.get('name')
+    if AddAthlete.objects.filter(access_code=uid) :
+        athlete_id=AddAthlete.objects.filter(access_code=uid).first().fullname
+        managself=Management.objects.filter(fullname=athlete_id).first()
+                
+        if managself.ingym == False and managself.limitation > managself.accessed:
+            managself.accessed=managself.accessed + 1
+            managself.ingym = True
+            uid="access"
+            ser.write("green".encode())
+        
+        elif managself.ingym == False and managself.limitation < managself.accessed:
+            uid="limited"
+            ser.write("red".encode())
+        
+        elif managself.ingym == False and managself.limitation < managself.accessed and today > managself.last_access:
+            managself.accessed=1
+            managself.ingym = True
+            uid="access"
+            ser.write("green".encode())
+
+        else:
+            managself.ingym = False
+            uid="removed"
+            ser.write("red".encode())
+
+
+                
+        managself.save()
+
+                # ingym = AddAthlete.objects.filter(access_code=uid).first().access_code
+              
+                
+            
+    else:
+                
+        uid="not exist"
     
 
    
@@ -66,35 +108,41 @@ inout={}
 
 import json
 class Managementapi(APIView):
+    
     serializer_class=ManagementSerializer
     def get(self,request):
         try :
+            today = timezone.now().date()
             ser = serial.Serial('COM6', 9600) # open the serial port at 9600 bits per second
             uid =ser.readline().decode('utf-8').rstrip().replace("UID: ","");
             if AddAthlete.objects.filter(access_code=uid) :
                 athlete_id=AddAthlete.objects.filter(access_code=uid).first().fullname
                 managself=Management.objects.filter(fullname=athlete_id).first()
+
+                print(managself.limitation > managself.accessed)
                 
-                if managself.ingym == False :
+                if managself.ingym == False and managself.limitation > managself.accessed:
+                    managself.accessed=managself.accessed + 1
                     managself.ingym = True
                     uid="access"
                     ser.write("green".encode())
+        
+                elif managself.ingym == False and managself.limitation == managself.accessed:
+                    uid="limited"
+                    ser.write("red".encode())
+        
+                elif managself.ingym == False and managself.limitation == managself.accessed and today > managself.last_access:
+                    managself.accessed=1
+                    managself.ingym = True
+                    uid="access"
+                    ser.write("green".encode())
+
                 else:
                     managself.ingym = False
                     uid="removed"
                     ser.write("red".encode())
-
-
-                
-                managself.save()
-
-                # ingym = AddAthlete.objects.filter(access_code=uid).first().access_code
-              
-                
             
-            else:
-                
-                uid="not exist"
+            managself.save()
         except:
             uid="none"
         data=list(

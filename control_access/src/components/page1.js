@@ -1,9 +1,28 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/alt-text */
-import React from 'react'
+import React, { useState } from 'react';
 import imgg from '../static/images/body.jpg' 
 import {motion} from 'framer-motion'
+import axios from 'axios';
 
 function Page1() {
+    const [inputValue, setInputValue] = useState('');
+    const sendDataToDjango = async () => {
+        try {
+          const url = `http://127.0.0.1:8000?name=${inputValue}`; // URL with parameters
+    
+          const response = await axios.get(url);
+          console.log(response.data); // Handle the response data
+        } catch (error) {
+          console.error(error);
+        }
+      };
+    
+      const handleInputChange = (event) => {
+        setInputValue(event.target.value);
+      };
+
+      
   return (
    <motion.div 
    initial={{opacity:0}}
@@ -17,7 +36,8 @@ function Page1() {
             <h4>Build your body <br></br> transform your life</h4>
 
             <div className='input'>
-                <input type="text" placeholder='enter your code for fast qr code access'/>
+                <input type="text" value={inputValue} onChange={handleInputChange} placeholder='enter your code for fast qr code access'/>
+                <button onClick={sendDataToDjango}>Send Request</button>
             </div>
         </div>
         
