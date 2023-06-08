@@ -74,7 +74,7 @@ function Management() {
   //     for(var i =0; i<dataa.length;i++){
         
   //       object= dataa
-  //       console.log(object,dataa)
+  //        
   //     }
   //   })
   
@@ -84,15 +84,22 @@ function Management() {
       setApi(respo.data.list[user.username])
       setDatapie([respo.data.inout[user.username].ingym,respo.data.inout[user.username].outgym])
       
-      console.log(respo.data.uid)
-      if(respo.data.uid != "error occured" && respo.data.uid !== "limited"){
+       
+      if(respo.data.uid != "error occured" && respo.data.uid != "none" && respo.data.uid !== "limited"){
+       if(respo.data.uid === "access"){
         swal("successfully accessed", "New rfid scanned!"+respo.data.uid, "success");
+       }else{
+        swal("successfully removed ", "New rfid scanned!", "success");
+       }
       }
       if(respo.data.uid === "limited"){
         swal("limited access", "try Tomorow!", "error");
       }
       if(respo.data.uid === "not exist"){
         swal("Hmmm ", "Athlete not exist!", "error");
+      }
+      if(respo.data.uid === "error occured"){
+        swal("Hmmm ", "please, place your equipement !", "error");
       }
       // else{
       //   swal("user Doesn't exist", "New rfid scanned!"+respo.data.uid, "error");

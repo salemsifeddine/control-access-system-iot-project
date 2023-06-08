@@ -27,18 +27,8 @@ function Navbar() {
         :
         ''
         }
-            
-            
-               
                 {user? <li className='buttonlogin'> <button  onClick={logout}>logout </button> </li>:<><li className='buttonlogin'>  <Link to='/login'><button>Login</button></Link> </li><li className='buttonlogin btnreg'> <Link to='/register'><button>Register</button></Link> </li></> }
               
-            
-            
-               
-                
-              
-            
-            
         </ul>
          
     </div>

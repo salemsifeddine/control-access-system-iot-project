@@ -6,11 +6,12 @@ import {Link} from 'react-router-dom'
 
 function ContUser(props) {
   const linkk = `/user/detail/${props.id}`
+  
   return (
     
     <div className='listmanage' key={props.li}>
       <div className='leftlist'>
-        <div className='imglist'><img src={props.image} /></div>
+        <div className='imglist'><img src={"http://127.0.0.1:8000/media/"+props.api[props.il]["athlete_info"].image} /></div>
         <div className='usernamelist'>
           <h4>{props.api[props.il].fullname}</h4>
           {props.ingym?<p className="ingym">in the gym</p>:<p className='outgym'>out of the gym</p>}

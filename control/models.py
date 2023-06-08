@@ -55,7 +55,7 @@ class Schedule(models.Model):
 
 
 class AddAthlete(models.Model):
-    image=models.ImageField( upload_to="image_management",blank=True,null=True, height_field=None, width_field=None, max_length=None)
+    image=models.ImageField( upload_to="image_management",blank=True,null=True, height_field=None, width_field=None, max_length=None,default="image_management/default.png")
     fullname=models.CharField( max_length=50)
     user_id=models.CharField( max_length=50)
     user_phone=models.CharField( max_length=50)
@@ -75,7 +75,7 @@ class Management(models.Model):
     ingym = models.BooleanField(default=False)
     limitation= models.IntegerField(default=2)
     accessed= models.IntegerField(default=0)
-    last_access= models.DateField( auto_now=False, auto_now_add=False)
+    last_access= models.DateField( auto_now=False, auto_now_add=True)
     
     def __str__(self):
         
