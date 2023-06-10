@@ -17,12 +17,15 @@ function Schedule() {
 
   let [sched, setSched] = useState([])
   let [prgrm, setPrgrm] = useState([])
+  let [fetchedsched, setFetchedsched] = useState(false)
   let [total, setTotal] = useState([])
   let [que, setQue] = useState("salem")
   var contentth=[]
   var contenttr=[]
   let schedapi = ()=>{
+    setFetchedsched(true)
     fetch("http://127.0.0.1:8000/scheduleapi",{
+     
       method:"GET",
       headers:{
         'Content-type': "application/json"
@@ -66,7 +69,9 @@ function Schedule() {
 }
 
   
-  window.onload = schedapi();
+   if(!fetchedsched){
+    schedapi();
+   }
 
   const getapii = ()=>{
     Axios.get("http://127.0.0.1:8000/managementapi").then((respo)=>{

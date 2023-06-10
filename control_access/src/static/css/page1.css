@@ -48,6 +48,9 @@
     height: 100%;
     
 }
+input{
+    padding-left:10px;
+}
 .page1_1 .text .input{
     width: 97%;
     height: 8vh;
@@ -208,4 +211,20 @@
     width: 100%;
     height: 100%;
     
+}
+
+
+.styledsendbtn{
+    position: absolute;
+    margin-left: -83px;
+    height: 49px;
+    margin-top: 14px;
+    background: transparent;
+    border: none;
+    text-align: center;
+    font-family: Anton,sans-serif;
+    width: 84px;
+    font-size: 23px;
+    color: #1e1e1e !important;
+    opacity: 0.8;
 }

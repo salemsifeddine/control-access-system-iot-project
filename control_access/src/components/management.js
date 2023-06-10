@@ -1,3 +1,5 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable no-loop-func */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/alt-text */
@@ -6,6 +8,7 @@ import '../static/css/management.css'
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
+import AddModeratorIcon from '@mui/icons-material/AddModerator';
 import imgs from '../static/images/body.jpg' 
 import Chart from 'chart.js/auto';
 import Axios from 'axios'
@@ -18,6 +21,7 @@ import { Pie } from "react-chartjs-2";
 import Authcontext from './authcontext.js'
 import {motion} from 'framer-motion'
 import { List } from '@mui/material';
+import SearchList from './searchlist'
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -27,11 +31,76 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 
 function Management() {
+  const [api2,setApi2] = useState("")
+  const [api3,setApi3] = useState("")
+  const [renderr,setRenderr] = useState(false)
+  
+  const  [listsearch,setListsearch]= useState([])
+  const  [listsearch1,setListsearch1]= useState([])
+
+
+  const changeSearch = (e)=>{
+    setListsearch([])
+    Axios.get("http://127.0.0.1:8000/managementapi").then((respo)=>{
+      setApi2(respo.data.list[user.username])
+      setApi3([])
+      // setListsearch([])
+
+
+     
+      // if(e.target.value !== ""){
+      //   for( var userlist=0; userlist < respo.data.list[user.username].length; userlist++){
+      //     if(respo.data.list[user.username][userlist].fullname.includes(e.target.value)){
+
+      //       console.log( <SearchList datalist={respo.data.list[user.username][userlist]} />)
+
+      //       if (!listsearch.includes(<SearchList datalist={respo.data.list[user.username][userlist]} />)) {
+      //         setListsearch( [...listsearch, <SearchList datalist={respo.data.list[user.username][userlist]} />]);  
+      //       }  
+      //     }
+           
+      //   }
+      // }
+      
+
+      if (e.target.value !== '') {
+        
+
+        for( var userlist=0; userlist < respo.data.list[user.username].length; userlist++){
+          if(respo.data.list[user.username][userlist].fullname.includes(e.target.value)){
+        const newComponent = (
+          <SearchList datalist={respo.data.list[user.username][userlist]} />
+        );
+        const isComponentAlreadyAdded = listsearch.some(
+          (component) => component.props.datalist.fullname === e.target.value
+        );
+        if (!isComponentAlreadyAdded) {
+          setListsearch((prevList) => [...prevList, newComponent]);
+        }
+      }
+      }
+    }
+    
+
+     
+
+      
+      
+      //console.log(api2)
+    });
+
+    
+
+  }
 
   let {user} = useContext(Authcontext)
   const [api,setApi] = useState("")
   const [uid,setUid] = useState("")
   const [datapie,setDatapie]=useState([11,21])
+  
+
+ 
+
 
   const data = {
     labels: [
@@ -108,7 +177,8 @@ function Management() {
       setUid(respo.data.uid)
       
      
-    })
+    });
+
   }
   
   getapi();
@@ -117,7 +187,7 @@ function Management() {
    
     if(api[il].ingym){
       object.push(
-        <ContUser id={api[il].id} ingym={api[il].ingym} key={il} imgs={imgs} api={api} il={il} />
+        <ContUser id={api[il].id}  ingym={api[il].ingym} key={il} imgs={imgs} api={api} il={il} />
       )
     }
     
@@ -141,21 +211,29 @@ function Management() {
           <div className='addusertogym' onClick={()=>{
             history('user/add');
           }}>
-              <PersonAddIcon  />
+
+           
+              <PersonAddIcon />
            
           </div>
          
           <div className='morestatic' onClick={()=>{
-            swal("successfully accessed", "New rfid scanned & stored in DB!", "success");
+             
             history('/hall');
           }}>
-              <PersonAddIcon  />
+              <AddModeratorIcon  />
           </div>
         </div>
       </div>
       <div className="rightmanag">
       <div className='searchathletes'>
-        <input type="text" />
+        <input type="text" onChange={changeSearch} />
+        <div style={{"position":"absolute","width":59+"%"}}>
+        {listsearch.map((component, index) => (
+        <div key={index}>{component}</div>
+      ))}
+        </div>
+         
         </div>
         <div className='listsmanage'>
         {object}

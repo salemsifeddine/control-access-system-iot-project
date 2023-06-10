@@ -20,7 +20,7 @@ class UserProfile(models.Model):
 
 
     def __str__(self):
-        return _("profile user")
+        return self.user
 
 
 
@@ -32,7 +32,7 @@ class ProgramTab(models.Model):
     
 
     def __str__(self):
-        return "program"
+        return self.program
 
 class Schedule(models.Model):
     STATUS = (
@@ -51,7 +51,7 @@ class Schedule(models.Model):
     
     
     def __str__(self):
-        return "schedule"
+        return self.hall
 
 
 class AddAthlete(models.Model):
@@ -64,7 +64,7 @@ class AddAthlete(models.Model):
     access_code=models.CharField( max_length=50)
 
     def __str__(self):
-        return "user"
+        return self.fullname
 
 class Management(models.Model):
     hall=models.ForeignKey(User,on_delete=models.CASCADE)
@@ -79,5 +79,12 @@ class Management(models.Model):
     
     def __str__(self):
         
-        return "management"
+        return self.fullname
 
+
+class HallInfos(models.Model):
+    hall_name=models.CharField(max_length=50,default="GYM")
+    description=models.TextField(default="GYM ALGERIA")
+
+    def __str__(self) -> str:
+        return self.hall_name

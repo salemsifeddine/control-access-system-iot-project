@@ -2,6 +2,7 @@ from django.shortcuts import render
 import requests
 from django.utils import timezone
 from datetime import date
+import time
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
@@ -23,9 +24,8 @@ from rest_framework.authtoken.models import Token
 import serial
 
 
-
-
-
+ 
+ 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -41,49 +41,101 @@ class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class= MyTokenObtainPairSerializer
 
 def index(request):
+    
+     
+
+            
     today = timezone.now().date()
-    ser = serial.Serial('COM6', 9600) # open the serial port at 9600 bits per second
-    print("get")
+     # open the serial port at 9600 bits per second
+    fullnamedelete= request.GET.get('fullnamedelete')
+    
     uid=request.GET.get('name')
-    if AddAthlete.objects.filter(access_code=uid) :
+    
+    if fullnamedelete :
+       
+        
+
+       
+         
+
+        managself=Management.objects.filter(fullname=fullnamedelete).first()
+      
+        managself.ingym = False
+        managself.save()
+        # ser.write("red".encode())
+        # time.sleep(2)
+        # ser.close()         
+        
+        
+
+
+    
+    if AddAthlete.objects.filter(access_code=uid) and uid :
+       
+        
+       
+        
+        
+         
         athlete_id=AddAthlete.objects.filter(access_code=uid).first().fullname
         managself=Management.objects.filter(fullname=athlete_id).first()
-                
-        if managself.ingym == False and managself.limitation > managself.accessed:
-            managself.accessed=managself.accessed + 1
-            managself.ingym = True
-            uid="access"
-            ser.write("green".encode())
         
-        elif managself.ingym == False and managself.limitation < managself.accessed:
-            uid="limited"
-            ser.write("red".encode())
-        
-        elif managself.ingym == False and managself.limitation < managself.accessed and today > managself.last_access:
-            managself.accessed=1
-            managself.ingym = True
-            uid="access"
-            ser.write("green".encode())
-
-        else:
-            managself.ingym = False
-            uid="removed"
-            ser.write("red".encode())
-
-
+      
+        try:       
+            ser=serial.Serial('COM6', 9600)  
+            if managself.ingym == False and managself.limitation > managself.accessed:
+                managself.accessed=managself.accessed + 1
+                managself.ingym = True
+                managself.last_access = today
+                uid="access"
+                ser.write("green".encode())
+            
+            
+            elif managself.ingym == False and managself.limitation == managself.accessed and today == managself.last_access:
+                uid="limited"
+                ser.write("red".encode())
                 
-        managself.save()
+
+            elif managself.ingym == False and managself.limitation == managself.accessed and today < managself.last_access:
+                managself.accessed=  1
+                managself.ingym = True
+                managself.last_access = today
+                uid="access"
+                ser.write("green".encode())
+            
+            
+            elif managself.ingym == False and managself.limitation == managself.accessed and today > managself.last_access:
+                managself.accessed=1
+                managself.ingym = True
+                managself.last_access = today
+                uid="access"
+                ser.write("green".encode())
+                
+            else:
+                managself.ingym = False
+                uid="removed"
+                ser.write("red".encode())
+                
+
+
+                    
+            managself.save()
+            time.sleep(2)
+            ser.close()
+        except:
+            print("not connected port")
 
                 # ingym = AddAthlete.objects.filter(access_code=uid).first().access_code
               
-                
-            
+        
     else:
                 
         uid="not exist"
+         
     
 
-   
+    
+        
     return render(request,'index.html')
 
 
@@ -97,6 +149,8 @@ def getRoutes(request):
 
     return Response(routes)
 
+ 
+
 
 @api_view(["GET"])
 def database(request):
@@ -109,31 +163,48 @@ inout={}
 import json
 class Managementapi(APIView):
     
+
+
+     
+    
+
+
     serializer_class=ManagementSerializer
     def get(self,request):
+        
         try :
+            
+
             today = timezone.now().date()
-            ser = serial.Serial('COM6', 9600) # open the serial port at 9600 bits per second
+            ser=serial.Serial('COM6', 9600) # open the serial port at 9600 bits per second
             uid =ser.readline().decode('utf-8').rstrip().replace("UID: ","");
             if AddAthlete.objects.filter(access_code=uid) :
                 athlete_id=AddAthlete.objects.filter(access_code=uid).first().fullname
                 managself=Management.objects.filter(fullname=athlete_id).first()
 
-                print(managself.limitation > managself.accessed)
-                
+               
                 if managself.ingym == False and managself.limitation > managself.accessed:
                     managself.accessed=managself.accessed + 1
                     managself.ingym = True
+                    managself.last_access = today
                     uid="access"
                     ser.write("green".encode())
         
-                elif managself.ingym == False and managself.limitation == managself.accessed:
+                elif managself.ingym == False and managself.limitation == managself.accessed and today == managself.last_access:
                     uid="limited"
                     ser.write("red".encode())
         
                 elif managself.ingym == False and managself.limitation == managself.accessed and today > managself.last_access:
                     managself.accessed=1
                     managself.ingym = True
+                    managself.last_access = today
+                    uid="access"
+                    ser.write("green".encode())
+
+                elif managself.ingym == False and managself.limitation == managself.accessed and today < managself.last_access:
+                    managself.accessed=1
+                    managself.ingym = True
+                    managself.last_access = today
                     uid="access"
                     ser.write("green".encode())
 
@@ -143,6 +214,10 @@ class Managementapi(APIView):
                     ser.write("red".encode())
             
             managself.save()
+            time.sleep(2)
+            ser.close()
+            
+            
         except:
             uid="none"
         data=list(
@@ -165,8 +240,10 @@ class Managementapi(APIView):
        
             objdataapi[x.username]=datt
             
-
+        
         return Response({"inout":inout,"uid":uid,"list":objdataapi})
+    
+    
 
 
 
@@ -184,14 +261,16 @@ def schedule(request):
             datt=list(Schedule.objects.filter(hall_id=x.id,day=y).all().values()
                 )  
             #objdataapi[x.username]=y
-            objdataapi[x.username][y]=datt
+            try:
+                objdataapi[x.username][y]=datt
 
-            for v,vv in enumerate(objdataapi[x.username][y]):
-                target=ProgramTab.objects.filter(id=1).all().first()
-                ab=objdataapi[x.username][y][v]
-                ab["program"]=ProgramTab.objects.filter(id=1).all().first().program
-                ab["time"]=str(target.duration1.hour)+':' +str(target.duration1.minute) + '-' + str(target.duration2.hour) +':'+str(target.duration2.minute)
-               
+                for v,vv in enumerate(objdataapi[x.username][y]):
+                    target=ProgramTab.objects.filter(id=1).all().first()
+                    ab=objdataapi[x.username][y][v]
+                    ab["program"]=ProgramTab.objects.filter(id=1).all().first().program
+                    ab["time"]=str(target.duration1.hour)+':' +str(target.duration1.minute) + '-' + str(target.duration2.hour) +':'+str(target.duration2.minute)
+            except:
+                pass
                 
     
     return JsonResponse(objdataapi,safe=False)
@@ -269,7 +348,9 @@ class MyModelDetailView(APIView):
     
 
     def get_object(self, pk):
+        
         try:
+            
             return Management.objects.filter(pk=pk)
         except Management.DoesNotExist:
             pass
@@ -280,8 +361,40 @@ class MyModelDetailView(APIView):
         
         
         yy = mymodel.all().values().first()
+       
         yyy = yy["athlete_id"]
         yy["athlete_info"] = AddAthlete.objects.filter(id=yyy).values().first()
+
+        return Response(yy)
+    def post(self, request, pk):
+        ManagementModify = Management.objects.filter(pk=pk).first()
+        AddAthleteModify=AddAthlete.objects.filter(fullname=ManagementModify.athlete.fullname).first()
+        
+        ManagementModify.fullname = request.data["fullname"]
+        ManagementModify.limitation = request.data["limitation"]
+        ManagementModify.last_access = request.data["last_access"]
+        AddAthleteModify.fullname = request.data["fullname"]
+        AddAthleteModify.subscription_delay = request.data["subscription_delay"]
+        AddAthleteModify.access_code = request.data["access_code"]
+        AddAthleteModify.subscription_delay_from = request.data["subscription_delay_from"]
+        AddAthleteModify.user_phone = request.data["user_phone"]
+       
+        ManagementModify.save()
+        AddAthleteModify.save()
+       
+        serializer = ManagementSerializer(ManagementModify)
+
+        mymodel = self.get_object(pk)
+        serializer = ManagementSerializer(mymodel)
+        
+        
+        yy = mymodel.all().values().first()
+       
+        yyy = yy["athlete_id"]
+        yy["athlete_info"] = AddAthlete.objects.filter(id=yyy).values().first()
+
+        return Response(yy)
+    
     
 
 
@@ -291,10 +404,13 @@ class ApiadduserView(APIView):
     def get(self,request):
        
         try: 
-            ser = serial.Serial('COM6', 9600)
+            ser=serial.Serial('COM6', 9600)
              
                      
             uid = ser.readline().decode('utf-8').rstrip().replace("UID: ","");
+        
+            time.sleep(2)
+            ser.close()
                 
                 
         except :
@@ -305,7 +421,7 @@ class ApiadduserView(APIView):
 
 
     def post(self,request):
-        ser = serial.Serial('COM6', 9600)
+        ser=serial.Serial('COM6', 9600)
         ser_obj=AddUserSer(data=request.data)
         
         
@@ -315,7 +431,7 @@ class ApiadduserView(APIView):
         
         if ser_obj.is_valid():
 
-            print("image",request.data["image"])
+           
              
       
                     
@@ -353,7 +469,7 @@ class ApiadduserView(APIView):
 class registerapi(APIView):
     serializer_class=UserSerializer
     def get(self,request):
-        print("GET")
+    
         allobj= User.objects.all().values()
         return Response({"message":"list of objects","list":allobj})
 

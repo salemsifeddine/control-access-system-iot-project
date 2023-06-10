@@ -37,7 +37,7 @@ function Page1() {
 
             <div className='input'>
                 <input type="text" value={inputValue} onChange={handleInputChange} placeholder='enter your code for fast qr code access'/>
-                <button onClick={sendDataToDjango}>Send Request</button>
+                <button className='styledsendbtn' onClick={sendDataToDjango}>Send</button>
             </div>
         </div>
         

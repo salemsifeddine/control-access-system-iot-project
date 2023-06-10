@@ -7,8 +7,20 @@ import Authcontext from './authcontext.js';
 
 
 function HallDetail() {
-   
+    const [Nathletes,setNathletes]=useState(0)
     const {user} = useContext(Authcontext)
+
+    const fetchNumber = ()=>{
+
+        axios.get("http://127.0.0.1:8000/managementapi").then((res)=>{
+            
+        setNathletes(res.data.list[user.username].length)
+        }).catch((res)=>console.log())
+    }
+
+    fetchNumber();
+   
+    
 
   return (
     <div className='layer1'>
@@ -22,9 +34,9 @@ function HallDetail() {
                 <h2>{user.username}</h2>
             </div>
             <div className='otherinfos'>
-                <h3>Hall name:</h3>
-                <h3>Description:</h3>
-                <h3>N° of athletes:</h3>
+                <h3>Hall name:<input type='text' name="descriphallnametion" /></h3>
+                <h3>Description:<input type='text' name="description" /></h3>
+                <h3>N° of athletes:{Nathletes}</h3>
                 <h3>Schedule:</h3>
                 
                 
