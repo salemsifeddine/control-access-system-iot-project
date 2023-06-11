@@ -45,9 +45,13 @@ function AddUser() {
  
 
   setInterval(()=>{
-    if(! document.getElementById("user_access_code").value){
-      getapi1()
+    if(window.location.pathname === "/management/user/add"){
+      if(! document.getElementById("user_access_code").value){
+        getapi1()
+        console.log("yesss")
+      }
     }
+    
     } , 1000);
 
 

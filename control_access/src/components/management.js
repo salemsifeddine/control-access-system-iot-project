@@ -153,8 +153,8 @@ function Management() {
       setApi(respo.data.list[user.username])
       setDatapie([respo.data.inout[user.username].ingym,respo.data.inout[user.username].outgym])
       
-       
-      if(respo.data.uid != "error occured" && respo.data.uid != "none" && respo.data.uid !== "limited"){
+       console.log(respo.data.uid)
+      if(respo.data.uid != "error occured" && respo.data.uid != "none" && respo.data.uid !== "limited" && respo.data.uid !== "not exist"){
        if(respo.data.uid === "access"){
         swal("successfully accessed", "New rfid scanned!"+respo.data.uid, "success");
        }else{
@@ -163,8 +163,10 @@ function Management() {
       }
       if(respo.data.uid === "limited"){
         swal("limited access", "try Tomorow!", "error");
+       
       }
-      if(respo.data.uid === "not exist"){
+      if(respo.data.uid === "not exist"  ){
+        
         swal("Hmmm ", "Athlete not exist!", "error");
       }
       if(respo.data.uid === "error occured"){

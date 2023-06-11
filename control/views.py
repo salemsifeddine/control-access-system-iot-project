@@ -114,13 +114,13 @@ def index(request):
             else:
                 managself.ingym = False
                 uid="removed"
-                ser.write("red".encode())
+                ser.write("green".encode())
                 
 
 
                     
             managself.save()
-            time.sleep(2)
+             
             ser.close()
         except:
             print("not connected port")
@@ -130,7 +130,7 @@ def index(request):
         
     else:
                 
-        uid="not exist"
+        uid="none"
          
     
 
@@ -168,7 +168,7 @@ class Managementapi(APIView):
      
     
 
-
+    uid="none"
     serializer_class=ManagementSerializer
     def get(self,request):
         
@@ -208,13 +208,18 @@ class Managementapi(APIView):
                     uid="access"
                     ser.write("green".encode())
 
-                else:
+                elif managself.ingym==True:
                     managself.ingym = False
                     uid="removed"
                     ser.write("red".encode())
+
+                managself.save()
+            else:
+                uid="not exist"
+                
             
-            managself.save()
-            time.sleep(2)
+            
+            
             ser.close()
             
             
@@ -240,7 +245,7 @@ class Managementapi(APIView):
        
             objdataapi[x.username]=datt
             
-        
+        print(uid)
         return Response({"inout":inout,"uid":uid,"list":objdataapi})
     
     
@@ -409,7 +414,7 @@ class ApiadduserView(APIView):
                      
             uid = ser.readline().decode('utf-8').rstrip().replace("UID: ","");
         
-            time.sleep(2)
+           
             ser.close()
                 
                 
