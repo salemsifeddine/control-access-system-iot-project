@@ -142,7 +142,7 @@ function Register() {
                 }, 3000);
       }else{
         swal(
-          'Recheck your network ',
+          'Recheck your form ',
           'and register again,please!',
           'error'
         )

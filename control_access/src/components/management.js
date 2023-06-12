@@ -44,23 +44,8 @@ function Management() {
     Axios.get("http://127.0.0.1:8000/managementapi").then((respo)=>{
       setApi2(respo.data.list[user.username])
       setApi3([])
-      // setListsearch([])
-
-
      
-      // if(e.target.value !== ""){
-      //   for( var userlist=0; userlist < respo.data.list[user.username].length; userlist++){
-      //     if(respo.data.list[user.username][userlist].fullname.includes(e.target.value)){
-
-      //       console.log( <SearchList datalist={respo.data.list[user.username][userlist]} />)
-
-      //       if (!listsearch.includes(<SearchList datalist={respo.data.list[user.username][userlist]} />)) {
-      //         setListsearch( [...listsearch, <SearchList datalist={respo.data.list[user.username][userlist]} />]);  
-      //       }  
-      //     }
-           
-      //   }
-      // }
+ 
       
 
       if (e.target.value !== '') {
@@ -86,7 +71,7 @@ function Management() {
 
       
       
-      //console.log(api2)
+    
     });
 
     

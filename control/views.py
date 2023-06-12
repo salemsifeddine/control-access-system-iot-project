@@ -88,7 +88,10 @@ def index(request):
                 managself.ingym = True
                 managself.last_access = today
                 uid="access"
+                ser.write("open".encode())
+                time.sleep(3)
                 ser.write("green".encode())
+                time.sleep(2) 
             
             
             elif managself.ingym == False and managself.limitation == managself.accessed and today == managself.last_access:
@@ -101,7 +104,10 @@ def index(request):
                 managself.ingym = True
                 managself.last_access = today
                 uid="access"
+                ser.write("open".encode())
+                time.sleep(3)
                 ser.write("green".encode())
+                time.sleep(2) 
             
             
             elif managself.ingym == False and managself.limitation == managself.accessed and today > managself.last_access:
@@ -109,19 +115,23 @@ def index(request):
                 managself.ingym = True
                 managself.last_access = today
                 uid="access"
+                ser.write("open".encode())
+                time.sleep(3)
                 ser.write("green".encode())
+                time.sleep(2) 
                 
             else:
                 managself.ingym = False
                 uid="removed"
                 ser.write("green".encode())
+                 
                 
 
 
                     
             managself.save()
              
-            ser.close()
+           
         except:
             print("not connected port")
 
@@ -173,7 +183,7 @@ class Managementapi(APIView):
     def get(self,request):
         
         try :
-            
+           
 
             today = timezone.now().date()
             ser=serial.Serial('COM6', 9600) # open the serial port at 9600 bits per second
@@ -184,34 +194,51 @@ class Managementapi(APIView):
 
                
                 if managself.ingym == False and managself.limitation > managself.accessed:
+                    uid="access"
+                    ser.write("open".encode())
+                    time.sleep(3)
+                    ser.write("green".encode())
+                    time.sleep(2) 
+                    
                     managself.accessed=managself.accessed + 1
                     managself.ingym = True
                     managself.last_access = today
-                    uid="access"
-                    ser.write("green".encode())
+                    
+                   
+                    
+                    
         
                 elif managself.ingym == False and managself.limitation == managself.accessed and today == managself.last_access:
                     uid="limited"
                     ser.write("red".encode())
-        
+                     
                 elif managself.ingym == False and managself.limitation == managself.accessed and today > managself.last_access:
                     managself.accessed=1
                     managself.ingym = True
                     managself.last_access = today
                     uid="access"
+                    ser.write("open".encode())
+                    time.sleep(3)
                     ser.write("green".encode())
+                    time.sleep(2) 
+                   
 
                 elif managself.ingym == False and managself.limitation == managself.accessed and today < managself.last_access:
                     managself.accessed=1
                     managself.ingym = True
                     managself.last_access = today
                     uid="access"
+                    ser.write("open".encode())
+                    time.sleep(3)
                     ser.write("green".encode())
+                    time.sleep(2) 
+                    
 
                 elif managself.ingym==True:
                     managself.ingym = False
                     uid="removed"
                     ser.write("red".encode())
+                
 
                 managself.save()
             else:
@@ -245,7 +272,7 @@ class Managementapi(APIView):
        
             objdataapi[x.username]=datt
             
-        print(uid)
+        
         return Response({"inout":inout,"uid":uid,"list":objdataapi})
     
     

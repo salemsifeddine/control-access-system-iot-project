@@ -96,7 +96,7 @@ function AddUser() {
              }, 3000);
   }else{
     swal(
-      'Recheck your network ',
+      'Recheck your form ',
       'and send it again,please!',
       'error'
     )
