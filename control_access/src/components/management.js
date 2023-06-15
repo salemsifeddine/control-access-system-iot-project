@@ -135,33 +135,89 @@ function Management() {
   // }
   const getapi = ()=>{
     Axios.get("http://127.0.0.1:8000/managementapi").then((respo)=>{
+      
       setApi(respo.data.list[user.username])
       setDatapie([respo.data.inout[user.username].ingym,respo.data.inout[user.username].outgym])
-      
-       console.log(respo.data.uid)
-      if(respo.data.uid != "error occured" && respo.data.uid != "none" && respo.data.uid !== "limited" && respo.data.uid !== "not exist"){
-       if(respo.data.uid === "access"){
-        swal("successfully accessed", "New rfid scanned!"+respo.data.uid, "success");
-       }else{
-        swal("successfully removed ", "New rfid scanned!", "success");
-       }
-      }
-      if(respo.data.uid === "limited"){
-        swal("limited access", "try Tomorow!", "error");
        
-      }
-      if(respo.data.uid === "not exist"  ){
-        
-        swal("Hmmm ", "Athlete not exist!", "error");
-      }
-      if(respo.data.uid === "error occured"){
-        swal("Hmmm ", "please, place your equipement !", "error");
+      
+      if(user.username == Object.keys(respo.data.uid)[0]){
+        if(respo.data.uid[user.username] != "error occured" && respo.data.uid[user.username]  != "none" && respo.data.uid[user.username]  !== "limited" && respo.data.uid[user.username]  !== "not exist"){
+          if(respo.data.uid["AnonymousUser"]  == "not exist"){
+            console.log(respo.data)
+             
+             swal("Hmmm ", "Athlete not exist!", "error");
+             var msg5= 'Athlete with this UID does not exist!'
+             var MsgTxt5= new SpeechSynthesisUtterance(msg5);
+             window.speechSynthesis.speak(MsgTxt5);
+           
+          }
+          
+          if(respo.data.uid[user.username]  === "access"){
+           swal("successfully accessed", "New rfid scanned!"+respo.data.uid[user.username] , "success");
+           var msg2=""
+           if(respo.data.uid["duration_left"]>1){
+             msg2= 'welcome '+respo.data.uid["card_owner"]+", " + respo.data.uid["duration_left"] + " days have left for your membership"
+           }else{
+             msg2= 'welcome'+respo.data.uid["card_owner"] +", " + respo.data.uid["duration_left"] + " day has left for your membership"
+           } 
+
+           var MsgTxt2 = new SpeechSynthesisUtterance(msg2);
+           window.speechSynthesis.speak(MsgTxt2);
+          }else if(respo.data.uid[user.username]  === "removed"){
+           swal("successfully removed ", "New rfid scanned!", "success");
+           var msg3=""
+           if(respo.data.uid["duration_left"]>1){
+             msg3= 'Good bye'+respo.data.uid["card_owner"] +", " + respo.data.uid["duration_left"] + " days have left for your membership"
+           }else{
+             msg3= 'Good bye'+respo.data.uid["card_owner"] +", " + respo.data.uid["duration_left"] + " day has left for your membership"
+           }
+           var MsgTxt3= new SpeechSynthesisUtterance(msg3);
+           window.speechSynthesis.speak(MsgTxt3);
+          }
+         }
+         if(respo.data.uid[user.username]  === "limited"){
+           swal("limited access", "try Tomorow!", "error");
+           var msg4= 'you have accessed ' + respo.data.uid["accessed"] + " times over " + respo.data.uid["limitation"] +" this day, try another Time!"
+           var MsgTxt4= new SpeechSynthesisUtterance(msg4);
+           window.speechSynthesis.speak(MsgTxt4);
+          
+         }
+         if(respo.data.uid["AnonymousUser"]  === "not exist"){
+          console.log(respo.data)
+           
+           swal("Hmmm ", "Athlete not exist!", "error");
+           var msg5= 'Athlete with this UID does not exist!'
+           var MsgTxt5= new SpeechSynthesisUtterance(msg5);
+           window.speechSynthesis.speak(MsgTxt5);
+         
+        }
+         if(respo.data.uid[user.username]  === "not exist"  ){
+          console.log(respo.data)
+           
+           swal("Hmmm ", "Athlete not exist!", "error");
+           var msg6= 'Athlete with this UID does not exist!'
+           var MsgTxt6= new SpeechSynthesisUtterance(msg6);
+           window.speechSynthesis.speak(MsgTxt6);
+         }
+         if(respo.data.uid[user.username]  === "error occured"){
+           swal("Hmmm ", "please, place your equipement !", "error");
+         }
+      }else{
+        if(respo.data.uid["AnonymousUser"]  == "not exist"){
+          console.log(respo.data)
+           
+           swal("Hmmm ", "Athlete not exist!", "error");
+           var msg7= 'Athlete with this UID does not exist!'
+           var MsgTxt7= new SpeechSynthesisUtterance(msg7);
+           window.speechSynthesis.speak(MsgTxt7);
+         
+        }
       }
       // else{
       //   swal("user Doesn't exist", "New rfid scanned!"+respo.data.uid, "error");
       // }
       
-      setUid(respo.data.uid)
+      setUid(respo.data.uid[user.username] )
       
      
     });

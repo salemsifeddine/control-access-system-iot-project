@@ -33,6 +33,7 @@ urlpatterns = [
     path("managementapi/<int:pk>/",MyModelDetailView.as_view()),
     # path("programsch",programsch,name="programsch"),
     # path("add/user/api",userCreate,name="adduserapi"),
-    path("edit/",csrf_exempt(ApiadduserView.as_view()),name="dd")
+    path("edit/",csrf_exempt(ApiadduserView.as_view()),name="dd"),
+    path("schedulePost/",csrf_exempt(ApiSchedulePost.as_view()),name="ApiSchedulePost")
     
 ]

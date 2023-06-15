@@ -1,3 +1,5 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable no-whitespace-before-property */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable no-unused-vars */
@@ -10,10 +12,12 @@ import $ from 'jquery'
 import swal from 'sweetalert'
 import {motion} from 'framer-motion'
 import Axios from 'axios'
+import Authcontext from './authcontext.js';
 
 function AddUser() {
 
   let history = useNavigate();
+  let {user} = useContext(Authcontext)
 
   let [fullname,setFullname]=useState()
   let [user_id,setUser_id]=useState()
@@ -30,7 +34,7 @@ function AddUser() {
 
     Axios.get("http://127.0.0.1:8000/edit/").then((respo)=>{
      
-     if(respo.data.uid != "none"){
+     if(respo.data.uid   != "none"){
       document.getElementById("user_access_code").value = respo.data.uid.replace("UID: ","");
       setDatat({
         ...datat,
@@ -48,7 +52,7 @@ function AddUser() {
     if(window.location.pathname === "/management/user/add"){
       if(! document.getElementById("user_access_code").value){
         getapi1()
-        console.log("yesss")
+         
       }
     }
     
@@ -86,7 +90,10 @@ function AddUser() {
   
 
   if(ress.status == 200){
+            var msg="successfully accessed"
             swal("successfully accessed", "New user registered!", "success");
+            var MsgTxt1 = new SpeechSynthesisUtterance(msg);
+            window.speechSynthesis.speak(MsgTxt1);
             document.getElementsByClassName("swal-button")[0].style.opacity =0
             setTimeout(() => {
                history("/management")
@@ -95,6 +102,9 @@ function AddUser() {
               document.getElementsByClassName("swal-overlay")[0].remove()
              }, 3000);
   }else{
+    var msg2= 'Recheck your form'
+    var MsgTxt2 = new SpeechSynthesisUtterance(msg2);
+    window.speechSynthesis.speak(MsgTxt2);
     swal(
       'Recheck your form ',
       'and send it again,please!',
@@ -108,7 +118,21 @@ function AddUser() {
   }
   
   
-}).catch(error=>console.log(error))
+}).catch(error=>{
+  var msg3= 'Recheck your form'
+    var MsgTxt3 = new SpeechSynthesisUtterance(msg3);
+    window.speechSynthesis.speak(MsgTxt3);
+    swal(
+      'Recheck your form ',
+      'and send it again,please!',
+      'error'
+    )
+    document.getElementsByClassName("swal-button")[0].style.opacity =0
+    setTimeout(() => {
+      
+      document.getElementsByClassName("swal-modal")[0].style.display = "none"
+     }, 3000);
+})
 
   }
   const inputHandler = (event)=>{
@@ -178,8 +202,8 @@ function AddUser() {
                 <input value={fullname} onChange={inputHandler}  name="fullname" type="text" />
             </div>
             <div className='otherinfos'>
-                <h3>User id:</h3>
-                <input onChange={inputHandler} name="user_id" value={user_id} type="text" />
+                <h3>Hall :</h3>
+                <input  name="user_id" value={user.username} type="text" />
                 <h3>User phone:</h3>
                 <input onChange={inputHandler} name="user_phone" value={user_phone} type="text" />
                
@@ -207,7 +231,7 @@ function AddUser() {
                   "height": 100+"%",
                   "text-transform": "uppercase",
                   "width": 70+"% !important",
-                  "margin-top":"120px"
+                  "margin-top":"-100px"
                 }}>Submit Addition</button>
                 
             </div>

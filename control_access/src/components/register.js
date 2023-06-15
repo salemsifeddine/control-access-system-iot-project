@@ -26,7 +26,7 @@ function Register() {
   
 
   const inputHandler = (e)=>{
-   console.log(register)
+ 
 
    
 

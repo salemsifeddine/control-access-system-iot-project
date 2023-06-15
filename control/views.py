@@ -88,6 +88,7 @@ def index(request):
                 managself.ingym = True
                 managself.last_access = today
                 uid="access"
+                hallname=managself.hall
                 ser.write("open".encode())
                 time.sleep(3)
                 ser.write("green".encode())
@@ -96,25 +97,29 @@ def index(request):
             
             elif managself.ingym == False and managself.limitation == managself.accessed and today == managself.last_access:
                 uid="limited"
+                hallname=managself.hall
                 ser.write("red".encode())
+                time.sleep(2)
                 
 
-            elif managself.ingym == False and managself.limitation == managself.accessed and today < managself.last_access:
+            elif managself.ingym == False  and today != managself.last_access:
                 managself.accessed=  1
                 managself.ingym = True
                 managself.last_access = today
                 uid="access"
+                hallname=managself.hall
                 ser.write("open".encode())
                 time.sleep(3)
                 ser.write("green".encode())
                 time.sleep(2) 
             
             
-            elif managself.ingym == False and managself.limitation == managself.accessed and today > managself.last_access:
+            elif managself.ingym == True  and today != managself.last_access:
                 managself.accessed=1
                 managself.ingym = True
-                managself.last_access = today
+                managself.last_access = managself.last_access
                 uid="access"
+                hallname=managself.hall
                 ser.write("open".encode())
                 time.sleep(3)
                 ser.write("green".encode())
@@ -123,6 +128,7 @@ def index(request):
             else:
                 managself.ingym = False
                 uid="removed"
+                hallname=managself.hall
                 ser.write("green".encode())
                  
                 
@@ -171,6 +177,8 @@ objdataapi={}
 inout={}
 
 import json
+
+uidd=""
 class Managementapi(APIView):
     
 
@@ -179,15 +187,21 @@ class Managementapi(APIView):
     
 
     uid="none"
+    hallname="salem"
     serializer_class=ManagementSerializer
+    
+    
     def get(self,request):
-        
+        hallname="salem"
+        uidd=""
         try :
            
 
             today = timezone.now().date()
             ser=serial.Serial('COM6', 9600) # open the serial port at 9600 bits per second
             uid =ser.readline().decode('utf-8').rstrip().replace("UID: ","");
+
+            uidd=uid
             if AddAthlete.objects.filter(access_code=uid) :
                 athlete_id=AddAthlete.objects.filter(access_code=uid).first().fullname
                 managself=Management.objects.filter(fullname=athlete_id).first()
@@ -195,6 +209,8 @@ class Managementapi(APIView):
                
                 if managself.ingym == False and managself.limitation > managself.accessed:
                     uid="access"
+                    
+                    hallname=managself.hall
                     ser.write("open".encode())
                     time.sleep(3)
                     ser.write("green".encode())
@@ -210,13 +226,17 @@ class Managementapi(APIView):
         
                 elif managself.ingym == False and managself.limitation == managself.accessed and today == managself.last_access:
                     uid="limited"
+                    hallname=managself.hall
                     ser.write("red".encode())
+                    time.sleep(2)
+                    
                      
                 elif managself.ingym == False and managself.limitation == managself.accessed and today > managself.last_access:
                     managself.accessed=1
                     managself.ingym = True
                     managself.last_access = today
                     uid="access"
+                    hallname=managself.hall
                     ser.write("open".encode())
                     time.sleep(3)
                     ser.write("green".encode())
@@ -228,6 +248,7 @@ class Managementapi(APIView):
                     managself.ingym = True
                     managself.last_access = today
                     uid="access"
+                    hallname=managself.hall
                     ser.write("open".encode())
                     time.sleep(3)
                     ser.write("green".encode())
@@ -237,24 +258,38 @@ class Managementapi(APIView):
                 elif managself.ingym==True:
                     managself.ingym = False
                     uid="removed"
+                    hallname=managself.hall
+                    ser.write("open".encode())
+                    time.sleep(3)
                     ser.write("red".encode())
+                    time.sleep(2) 
+                
+                else:
+                    uid="not exist"
+                   
+                    ser.write("red".encode())
+                    time.sleep(2) 
                 
 
                 managself.save()
             else:
                 uid="not exist"
+              
+                ser.write("red".encode())
+                time.sleep(2) 
                 
             
             
             
-            ser.close()
+            
             
             
         except:
             uid="none"
-        data=list(
-         Management.objects.values()
-        )
+
+        
+        
+        
     
         for x in User.objects.all():
             datt=list(Management.objects.filter(hall_id=x.id).all().values())
@@ -272,8 +307,34 @@ class Managementapi(APIView):
        
             objdataapi[x.username]=datt
             
+        objhall={}
         
-        return Response({"inout":inout,"uid":uid,"list":objdataapi})
+        # uidd=ser.readline().decode('utf-8').rstrip().replace("UID: ","");
+       
+        
+        try:
+
+            today = timezone.now().date()
+            # uidd=ser.readline().decode('utf-8').rstrip().replace("UID: ","");
+            objhall[str(hallname.username)]=uid
+            
+            if AddAthlete.objects.filter(access_code=uidd):
+                owner = AddAthlete.objects.filter(access_code=uidd).first().fullname
+                objhall["card_owner"]=owner
+
+                objhall["limitation"]=Management.objects.filter(fullname=owner).first().limitation
+                objhall["accessed"]=Management.objects.filter(fullname=owner).first().accessed
+                dur11=AddAthlete.objects.filter(access_code=uidd).first().subscription_delay - today
+                
+                 
+                objhall["duration_left"]= dur11.days
+        except:
+
+            objhall[str(request.user)]=uid
+                
+                
+       
+        return Response({"inout":inout,"uid":objhall,"list":objdataapi})
     
     
 
@@ -282,98 +343,34 @@ class Managementapi(APIView):
 
 @api_view(["GET"])
 def schedule(request):
+    objdataapi={}
     days=["saturday","sunday","monday",'tuesday',"wednesday","thursday","friday"]
     data=list(
          Schedule.objects.values()
     )
     
+    
     for x in User.objects.all():
         objdataapi[x.username]={}
         for y in days:
-            datt=list(Schedule.objects.filter(hall_id=x.id,day=y).all().values()
-                )  
+            userid=User.objects.filter(username=x.username).first()
+            datt=list(Schedule.objects.filter(hall=userid.id,day=y).all().values()
+                )
+            
+            
             #objdataapi[x.username]=y
-            try:
-                objdataapi[x.username][y]=datt
+            
+            objdataapi[x.username][y]=datt
 
-                for v,vv in enumerate(objdataapi[x.username][y]):
-                    target=ProgramTab.objects.filter(id=1).all().first()
-                    ab=objdataapi[x.username][y][v]
-                    ab["program"]=ProgramTab.objects.filter(id=1).all().first().program
-                    ab["time"]=str(target.duration1.hour)+':' +str(target.duration1.minute) + '-' + str(target.duration2.hour) +':'+str(target.duration2.minute)
-            except:
-                pass
+            for v,vv in enumerate(objdataapi[x.username][y]):        
+                prgrmschedid=datt[v]["programSche_id"]
+                target=ProgramTab.objects.filter(id=prgrmschedid).all().first()
+                ab=objdataapi[x.username][y][v]
+                ab["program"]=ProgramTab.objects.filter(id=prgrmschedid).all().first().program
+                ab["time"]=str(target.duration1.hour)+':' +str(target.duration1.minute) + '-' + str(target.duration2.hour) +':'+str(target.duration2.minute)
                 
     
     return JsonResponse(objdataapi,safe=False)
-
-# @api_view(["GET"])
-# def programsch(request):
-    
-    
-#     newobj={}
-#     newarrobj=[]
-#     objdayarr={}
-#     days=["saturday","sunday","monday",'tuesday',"wednesday","thursday","friday"]
-#     target=""
-#     daysobj={"saturday":[],"sunday":[],"monday":[],'tuesday':[],"wednesday":[],"thursday":[],"friday":[]}
-
-#     saturday=[]
-#     sunday=[]
-#     monday=[]
-#     tuesday=[]
-#     wednesday=[]
-#     thursday=[]
-#     friday=[]
-    
-#     # objectdata[obj.day] = {}
-
-    
-       
-        
-        
-        
-    
-#     for i , day in enumerate(days):
-#         newarrobj=[]
-        
-       
-            
-
-#         if  Schedule.objects.filter(day=day):
-#             target = Schedule.objects.filter(day=day)
-            
-#             for ij , ijj in enumerate(target):
-#                 newobj={}
-               
-#                 newobj["time"]=str(target[ij].programSche.duration1.hour)+':' +str(target[ij].programSche.duration1.minute) + '-' + str(target[ij].programSche.duration2.hour) +':'+str(target[ij].programSche.duration2.minute)
-#                 newobj["program"]=target[ij].programSche.program
-
-#                 newarrobj.append(newobj)
-            
-#         daysobj[day]=newarrobj
-
-    
-            
-    
-
-    
-    
-#     return JsonResponse(daysobj,safe=False)
-
-# @api_view(["POST"])
-# def adduserapi(request):
-
-#     if request.is_ajax() and request.POST:
-#         print("ajax")
-#     # if request.method == "POST":
-#     #     print("resp")
-#     # else:
-#     #     pass
-#     # resp =requests.get("http://127.0.0.1:8000/add/user/api");
-    
-#     return JsonResponse("database")
-
 
 class MyModelDetailView(APIView):
     
@@ -474,28 +471,65 @@ class ApiadduserView(APIView):
                 
                 image=request.data["image"],
                 fullname=request.data["fullname"],
-                user_id=request.data["user_id"],
                 user_phone=request.data["user_phone"],
+                user_id=request.data["user_id"],
                 subscription_delay=request.data["subscription_delay"],
                 access_code=request.data["access_code"],
             
             )
             userid= AddAthlete.objects.filter(
                 fullname=request.data["fullname"],
-                user_phone=request.data["user_phone"])[0].id
+                user_phone=request.data["user_phone"]
+                )[0].id
+             
                 
             Management.objects.create(
-                hall=request.user,
+                hall=User.objects.get(username=request.data["user_id"]),
                 athlete=AddAthlete.objects.get(pk=int(userid)),
                 fullname=request.data["fullname"]
                 )
                 
             
-            # )
+           
         allob= AddAthlete.objects.all().values()
 
         return Response({"message":"list of objects","list":allob})
 
+
+
+
+class ApiSchedulePost(APIView):
+    serializer_class=AddScheduleSer
+
+    def get(self,request):
+       
+        return Response({"list":Schedule.objects.all().values()})
+
+
+    def post(self, request, format='json'):
+        serializer = AddScheduleSer(data=request.data)
+        if serializer.is_valid():
+
+            programtab=ProgramTab.objects.create(
+                duration1=request.data["duration1"],
+                duration2=request.data["duration2"],
+                program=request.data["program"]
+            )
+
+            programtab.save()
+
+
+            Schedule.objects.create(
+                hall=request.user,
+                day=request.data["day"],
+                programSche=programtab
+
+            )
+
+        
+           
+
+            return Response({"list":Schedule.objects.all().values()})
 
 
 class registerapi(APIView):

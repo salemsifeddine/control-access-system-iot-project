@@ -51,7 +51,7 @@ class Schedule(models.Model):
     
     
     def __str__(self):
-        return self.hall
+        return "schedulz"
 
 
 class AddAthlete(models.Model):
